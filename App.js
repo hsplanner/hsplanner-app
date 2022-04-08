@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
 });
  */
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -88,20 +88,22 @@ const MyRefreshComponent = ({style}) => (
   <ActivityIndicator style={style} color="red" size="large" />
 );
 
-class App extends React.Component {
-  state = {
+const App = () => {
+/*   state = {
     events: showFixedComponent ? sampleFixedEvents : sampleEvents,
     selectedDate: new Date(),
-  };
+  }; */
+  const [events, setEvents] = useState(showFixedComponent ? sampleFixedEvents : sampleEvents)
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  onEventPress = ({id, color, startDate, endDate}) => {
+  const onEventPress = ({id, color, startDate, endDate}) => {
     Alert.alert(
       `event ${color} - ${id}`,
       `start: ${startDate}\nend: ${endDate}`,
     );
   };
 
-  onGridClick = (event, startHour, date) => {
+  const onGridClick = (event, startHour, date) => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1; // zero-based
     const day = date.getDate();
@@ -112,43 +114,39 @@ class App extends React.Component {
     Alert.alert(`${year}-${month}-${day} ${hour}:${minutes}:${seconds}`);
   };
 
-  onDragEvent = (event, newStartDate, newEndDate) => {
+  const onDragEvent = (event, newStartDate, newEndDate) => {
     // Here you should update the event in your DB with the new date and hour
-    this.setState({
-      events: [
-        ...this.state.events.filter(e => e.id !== event.id),
-        {
-          ...event,
-          startDate: newStartDate,
-          endDate: newEndDate,
-        },
-      ],
-    });
+    setEvents([
+      ...events.filter(e => e.id !== event.id),
+      {
+        ...event,
+        startDate: newStartDate,
+        endDate: newEndDate,
+      },
+    ])
   };
 
-  onDayPress = (date, formattedDate) => {
+  const onDayPress = (date, formattedDate) => {
     console.log('Day: ', date, formattedDate);
   };
 
-  onMonthPress = (date, formattedDate) => {
+  const onMonthPress = (date, formattedDate) => {
     console.log('Month: ', date, formattedDate);
   };
-
-  render() {
-    const {events, selectedDate} = this.state;
+/*   const {events, selectedDate} = this.state; */
     return (
       <>
         <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.container}>
           <WeekView
             ref={r => {
-              this.componentRef = r;
+              componentRef = r;
             }}
             events={events}
             selectedDate={selectedDate}
             numberOfDays={7}
-            onEventPress={this.onEventPress}
-            onGridClick={this.onGridClick}
+            onEventPress={onEventPress}
+            onGridClick={onGridClick}
             headerStyle={styles.header}
             headerTextStyle={styles.headerText}
             hourTextStyle={styles.hourText}
@@ -162,16 +160,15 @@ class App extends React.Component {
             fixedHorizontally={showFixedComponent}
             showTitle={!showFixedComponent}
             showNowLine
-            onDragEvent={this.onDragEvent}
+            onDragEvent={onDragEvent}
             isRefreshing={false}
             RefreshComponent={MyRefreshComponent}
-            onDayPress={this.onDayPress}
-            onMonthPress={this.onMonthPress}
+            onDayPress={onDayPress}
+            onMonthPress={onMonthPress}
           />
         </SafeAreaView>
       </>
     );
-  }
 }
 
 const styles = StyleSheet.create({
