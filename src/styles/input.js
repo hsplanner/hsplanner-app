@@ -1,0 +1,110 @@
+import {StyleSheet} from 'react-native';
+import {colors} from '../styles/colors';
+export const Styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  selectedTextStyle: {
+    height: 40,
+    borderColor: 'gray',
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    width: '100%',
+    color: 'black',
+    fontSize: 14,
+    paddingLeft: 12,
+    marginTop: -2,
+  },
+  selectedTextStyle1: {
+    height: 40,
+    borderColor: 'gray',
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    width: '100%',
+    color: 'black',
+    fontSize: 20,
+    paddingLeft: 10,
+    marginTop: 15,
+  },
+  listTextStyle: {
+    color: '#000',
+    marginVertical: 10,
+    flex: 0.9,
+    marginLeft: 20,
+    marginHorizontal: 10,
+    textAlign: 'left',
+  },
+  searchBarStyle: {
+    marginBottom: 10,
+    flexDirection: 'row',
+    height: 40,
+    shadowRadius: 1,
+    shadowOpacity: 1.0,
+    borderWidth: 1,
+    shadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    borderColor: '#303030',
+    shadowColor: '#303030',
+    borderRadius: 5,
+    elevation: 1,
+    marginHorizontal: 10,
+  },
+  placeHolderTextStyle: {
+    color: 'red',
+    padding: 10,
+    textAlign: 'left',
+    width: '99%',
+    flexDirection: 'row',
+  },
+  dropDownIconStyle: {
+    width: 10,
+    height: 10,
+    left: -40,
+  },
+  dropDownIconStyle1: {
+    width: 10,
+    height: 10,
+    left: -40,
+    marginTop: 15,
+  },
+  pickerStyle: {
+    shadowRadius: 0.5,
+    shadowOpacity: 0.5,
+    borderWidth: 0.5,
+    height: 45,
+    borderColor: '#303030',
+    borderRadius: 8,
+    width: 'auto',
+    /*  width: '100%', */
+    margin: -15,
+    flex: 1,
+  },
+  pickerStyle1: {
+    height: 60,
+    borderBottomColor: 'dodgerblue',
+    borderBottomWidth: 2,
+  },
+  textInput: {
+    height: 45,
+    width: '100%',
+    marginTop: 1,
+    paddingLeft: 15,
+    /*   margin: 10, */
+    backgroundColor: 'white',
+    borderColor: '#303030',
+    /*  borderWidth: StyleSheet.hairlineWidth, */
+    borderRadius: 10,
+    borderWidth: 0.5,
+  },
+  errorText: {
+    fontSize: 13,
+    color: 'red',
+  },
+  errorInput: {
+    borderColor: 'red',
+  },
+});
