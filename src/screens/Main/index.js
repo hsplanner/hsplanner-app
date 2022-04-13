@@ -1,10 +1,7 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useRef, useState, useEffect } from 'react'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { View, Text, Modal, Alert } from 'react-native';
 import {RadioButton} from 'react-native-paper';
-import {Modalize} from 'react-native-modalize';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Formik, Field} from 'formik';
 import { Button, CustomInput, InputLabel, Menu, Title } from '../../components';
 import { PlannerList } from '../../components/organisms/PlannerList';
@@ -16,25 +13,13 @@ import { useAuthInfoStore, usePlannerStore } from '../../services/stores';
 
 
 export const Main = () => {
-  const { navigate } = useNavigation();
   const [modalPlannerVisible, setModalPlannerVisible] = useState(false)
 
   const [loadingModal, setLoadingModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { user, cleanUser } = useAuthInfoStore(); 
+  const { user } = useAuthInfoStore(); 
   const {setPlannerList, plannerList, increasePlanner} = usePlannerStore();
-/*   const dataFetch = [
-    {
-      id: 'assa',
-      title: 'Tito 6º ano',
-      description: 'Charlot Masson'
-    },
-    {
-      id: 'asdd',
-      title: 'Tito 6º ano',
-      description: 'Charlot Masson'
-    },
-  ] */
+
   const getPlanners = async () => {
     try {
       setLoading(true);

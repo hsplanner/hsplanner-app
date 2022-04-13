@@ -35,9 +35,8 @@ import {
 
 export const PlannerCard = ({item}) => {
   const {navigate} = useNavigation();
-  console.log('item!', item);
   return (
-    <CardContainer onPress={() => navigate('Calendar')}>
+    <CardContainer onPress={() => navigate('Calendar', {item})}>
       <LeftSide>
 {/*         <Text>{item.title}</Text>
         <Text>{item.description}</Text> */}

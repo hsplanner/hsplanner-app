@@ -26,9 +26,13 @@ import {
   StatusBar,
   Alert,
   ActivityIndicator,
+  Modal
 } from 'react-native';
-
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import WeekView, {createFixedWeekDate} from 'react-native-week-view';
+import { Menu, Title } from '../../components';
+import { colors } from '../../styles/colors';
+import { Header, WrapperModalContent } from './styles';
 
 const generateDates = (hours, minutes) => {
   const date = new Date();
@@ -88,12 +92,14 @@ const MyRefreshComponent = ({style}) => (
   <ActivityIndicator style={style} color="red" size="large" />
 );
 
-export const Calendar = () => {
+export const Calendar = ({ route }) => {
+  const [modalAddEventVisible, setModalAddEventVisible] = useState(false)
+  const [eventInitialData, event] = useState(false)
 
-/*   state = {
-    events: showFixedComponent ? sampleFixedEvents : sampleEvents,
-    selectedDate: new Date(),
-  }; */
+
+  const { item } = route.params;
+
+  console.log('itemINcalendar', item)
   const [events, setEvents] = useState(showFixedComponent ? sampleFixedEvents : sampleEvents)
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -111,8 +117,9 @@ export const Calendar = () => {
     const hour = date.getHours();
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
-
-    Alert.alert(`${year}-${month}-${day} ${hour}:${minutes}:${seconds}`);
+  /*   day, hours, minutes = 0, seconds = 0 */
+    setModalAddEventVisible(true)
+   /*  Alert.alert(`HERE${year}-${month}-${day} ${hour}:${minutes}:${seconds}`);  */
   };
 
   const onDragEvent = (event, newStartDate, newEndDate) => {
@@ -134,10 +141,15 @@ export const Calendar = () => {
   const onMonthPress = (date, formattedDate) => {
     console.log('Month: ', date, formattedDate);
   };
-/*   const {events, selectedDate} = this.state; */
+  /*   const {events, selectedDate} = this.state; */
+  console.log("events", events)
     return (
       <>
         <StatusBar barStyle="dark-content" />
+        <Header>
+          <Menu />
+          <Title ml={25}>{item.title}</Title>
+        </Header>
         <SafeAreaView style={styles.container}>
           <WeekView
             ref={r => {
@@ -167,6 +179,19 @@ export const Calendar = () => {
             onDayPress={onDayPress}
             onMonthPress={onMonthPress}
           />
+          <Modal visible={modalAddEventVisible}>
+            <WrapperModalContent>
+              <HeaderModal>
+                <Title>Adicionar Planner</Title>
+                <MaterialCommunityIcon
+                  name="close"
+                  size={35}
+                  color={colors.blueDark}
+                  onPress={() => setModalAddEventVisible(false)}
+                  />
+              </HeaderModal>
+            </WrapperModalContent>
+          </Modal>
         </SafeAreaView>
       </>
     );
