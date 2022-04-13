@@ -76,11 +76,12 @@ export const CloseButton = styled.Text`
 export const Header = styled.View`
   align-self: flex-start;
   padding-left: 8px;
-  background-color: #ffa404;
+  background-color: ${({theme}) => theme.colors.blueDark};
   width: 100%;
   height: 120px;
 
   border-right-width:0;
+  border-left-width:0;
   border-width: 1;
   border-radius: 2;
   border-color: #ddd;

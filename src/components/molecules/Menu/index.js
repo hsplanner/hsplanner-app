@@ -30,8 +30,8 @@ import {colors} from '../../../styles/colors';
 
 export const Menu = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const {user, cleanUser} = useAuthInfoStore();
-  console.log('userMenu', user);
+  const {user, cleanUser} = useAuthInfoStore(); 
+  console.log('userMenuu', user);
 
   const signOut = () => {
     AsyncStorage.clear().then(() => {
@@ -50,7 +50,7 @@ export const Menu = () => {
     <>
       <IconButton
         iconName="menu"
-        color="blue"
+        color={colors.blueDark}
         size={30}
         onPress={() => setModalVisible(!modalVisible)}
       />
@@ -66,11 +66,11 @@ export const Menu = () => {
                 style={{marginTop: 5}}
               />
             </CloseModal>
-            <TextUser>{user.nome}</TextUser>
-            <TextCpf>CPF: {user.cpf}</TextCpf>
+            <TextUser>{user.name}</TextUser>
+            <TextCpf>{user.email}</TextCpf>
           </Header>
           <Body>
-            <Column>
+  {/*           <Column>
               <WrapperRow>
                 <Row mb={8}>
                   <MaterialCommunityIcon
@@ -112,34 +112,7 @@ export const Menu = () => {
                   <DataInfoShort>celso@inova10.com</DataInfoShort>
                 </Row>
               </WrapperColumn>
-              <WrapperColumn>
-                <Row mt={8}>
-                  <MaterialIcon
-                    name="contact-support"
-                    size={24}
-                    color={colors.blueDark}
-                  />
-                  <LabelMenu>Suporte</LabelMenu>
-                </Row>
-                <DataInfoMedium mt={8}>Inova10</DataInfoMedium>
-                <Row mb={8}>
-                  <MaterialCommunityIcon
-                    name="web"
-                    size={24}
-                    color={colors.blueDark}
-                  />
-                  <DataInfoShort>inova10.com</DataInfoShort>
-                </Row>
-                <Row mb={8}>
-                  <MaterialCommunityIcon
-                    name="email-outline"
-                    size={24}
-                    color={colors.blueDark}
-                  />
-                  <DataInfoShort>suporte@inova10.com</DataInfoShort>
-                </Row>
-              </WrapperColumn>
-            </Column>
+            </Column> */}
 
             <WrapperSignOut>
               <MaterialIcon

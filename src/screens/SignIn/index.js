@@ -24,6 +24,7 @@ import {
 import {validationSchema} from './validationSchema';
 import logo from '../../assets/img/logo.png';
 import {useAuthInfoStore} from '../../services/stores/auth';
+import api from '../../services/api';
 
 export const SignIn = () => {
   const {navigate} = useNavigation();
@@ -32,7 +33,7 @@ export const SignIn = () => {
   const {setUser, user} = useAuthInfoStore();
 
   useEffect(() => {
-/*     async function loadStorageData() {
+    async function loadStorageData() {
       setLoadingStorage(true);
       const storageUser = await AsyncStorage.getItem('@RNAuth:user');
 
@@ -45,22 +46,25 @@ export const SignIn = () => {
       setLoadingStorage(false);
     }
 
-    loadStorageData(); */
+    loadStorageData();
   }, []);
 
   const handleSubmitForm = async values => {
-/*     setLoading(true);
-    axios
-      .post('https://simule-api.herokuapp.com/api/auth/login', values)
+    const body = {
+      username: values.username,
+      passwordHash: values.password 
+    }
+   setLoading(true);
+    api
+      .post('/login', body)
       .then(async function (response) {
-        console.log('respLogin', response.data.trabalhador);
+        console.log('respLogin', response?.data);
         setLoading(false);
-        setUser(response?.data?.trabalhador);
+        setUser(response?.data);
         await AsyncStorage.setItem(
           '@RNAuth:user',
-          JSON.stringify(response?.data?.trabalhador),
+          JSON.stringify(response?.data),
         );
-
       })
       .catch(function (error) {
         console.log('erroPost', error);
@@ -68,7 +72,7 @@ export const SignIn = () => {
           'Ocorreu um erro ao Logar, verifique suas credenciais ou tente novamente mais tarde.',
         );
         setLoading(false);
-      }); */
+      }); 
   };
 
   return (

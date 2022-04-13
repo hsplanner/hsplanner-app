@@ -21,7 +21,7 @@ export const ErrorText = styled(BaseText)`
 
 export const Title = styled(BaseText)`
   font-size: 21px;
-  color: ${({theme}) => theme.colors.greyDark};
+  color: ${({theme}) => theme.colors.blueDark};
   font-family: 'Montserrat-Bold';
   text-align: left;
 `;

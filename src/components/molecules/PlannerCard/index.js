@@ -13,7 +13,8 @@ import {
   CardTextMediumBold,
 } from '../../atoms';
 
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   CardContainer,
@@ -26,6 +27,8 @@ import {
   WrapperFirstText,
   FirstText,
   Text,
+  LeftSide,
+  RightSide
 } from './styles';
 
 export const PlannerCard = ({item}) => {
@@ -33,8 +36,22 @@ export const PlannerCard = ({item}) => {
   console.log('item!', item);
   return (
     <CardContainer onPress={() => navigate('Calendar')}>
-      <Text>{item.title}</Text>
-      <Text>{item.description}</Text>
+      <LeftSide>
+{/*         <Text>{item.title}</Text>
+        <Text>{item.description}</Text> */}
+        <CardTextMediumBold>{item.title}</CardTextMediumBold>
+        <CardTextSmall>{item.description}</CardTextSmall>
+{/*   <FirstText>Testeeeeeeee</FirstText>
+      <CardTextMedium>Medium</CardTextMedium> */}
+      </LeftSide>
+      <RightSide>
+      <MaterialCommunityIcon
+        name="chevron-right"
+        size={35}
+        color={colors.blueDark}
+      />
+      </RightSide>
+
     </CardContainer>
   );
 };

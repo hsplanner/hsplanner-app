@@ -15,11 +15,12 @@ import {
   InputLabel,
   Text,
 } from '../../components';
-import {Styles} from '../../styles/input';
+import { Styles } from '../../styles/input';
 
 import {ScreenContainer, ContentForm, ImageTop, ContainerRadio} from './styles';
 import {validationSchema} from './validationSchema';
 import logo from '../../assets/img/logo.png';
+import api from '../../services/api'
 
 export const SignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -52,25 +53,27 @@ export const SignUp = () => {
     navigate('SignIn');
   };
 
-  function retiraMascara(cpf) {
-    return cpf.replace(/\D/g, '');
-  }
-
   const handleSubmitForm = async values => {
-/*     try {
-      console.log(values);
-      values.dt_nascimento = formatISO(
-        parse(values.dt_nascimento, 'dd/MM/yyyy', new Date()),
-      );
-      values.cpf = retiraMascara(values.cpf);
-      console.log('valuesCa', values);
-      const result = await callSaveUser(values);
+    try {
+      setLoading(true)
+      const body = {
+        name: values.name,
+        email: values.email,
+        birthdate: values.birthdate,
+        username: values.username,
+        passwordHash: values.password,
+        userType: 1
+      }
+      console.log('values$$', values)
+      const result = await api.post('/user', body);
       console.log('Cadastrou', result.data);
+      setLoading(false)
+      Alert.alert('Usuário cadatrado com sucesso.');
       navigate('SignIn');
     } catch (erro) {
       setLoading(false);
-      console.log('erro', erro);
-    } */
+      console.log('erro', erro?.message || erro);
+    } 
   };
 
   return (
@@ -82,11 +85,9 @@ export const SignUp = () => {
         <Formik
           validationSchema={validationSchema}
           initialValues={{
-            cpf: '',
+            name: '',
             email: '',
-            nome: '',
-            sexo: '',
-            dt_nascimento: '',
+            birthdate: '',
             username: '',
             password: '',
           }}
@@ -102,58 +103,19 @@ export const SignUp = () => {
             handleChange,
           }) => (
             <ContentForm>
-              <Text mt={8} mb={4} ml={4}>
-                CPF
-              </Text>
-              <TextInputMask
-                type={'cpf'}
-                style={[
-                  Styles.textInput,
-                  errors?.cpf && touched.cpf && Styles.errorInput,
-                ]}
-                name="cpf"
-                onBlur={() => {
-                  setFieldTouched('cpf');
-                }}
-                value={values.cpf}
-                keyboardType="numeric"
-                placeholder="CPF"
-                onChangeText={handleChange('cpf')}
+              <Field
+                component={CustomInput}
+                name="name"
+                label="Nome"
+                placeholder="Nome"
               />
-              {errors?.cpf && touched.cpf && (
-                <ErrorText>{errors?.cpf}</ErrorText>
-              )}
               <Field
                 component={CustomInput}
                 name="email"
                 label="Email"
                 placeholder="Email"
               />
-              <Field
-                component={CustomInput}
-                name="nome"
-                label="Nome"
-                placeholder="Nome"
-              />
-              {/*             <InputLabel style={{marginBottom: 25, marginTop: 10}}>
-                Sexo
-              </InputLabel> */}
-              <RadioButton.Group
-                style={{marginTop: 8}}
-                onValueChange={handleChange('sexo')}
-                value={values.sexo}>
-                <ContainerRadio>
-                  <InputLabel>Masculino</InputLabel>
-                  <RadioButton value="M" />
-
-                  <InputLabel>Feminino</InputLabel>
-                  <RadioButton value="F" />
-                </ContainerRadio>
-              </RadioButton.Group>
-              {errors?.sexo && touched.sexo && (
-                <ErrorText>{errors?.sexo}</ErrorText>
-              )}
-{/*               <Text mt={8} mb={4} ml={4}>
+               <Text mt={8} mb={4} ml={4}>
                 Data de Nascimento
               </Text>
               <TextInputMask
@@ -162,24 +124,24 @@ export const SignUp = () => {
                   format: 'DD/MM/YYYY',
                 }}
                 label="Data de Nascimento"
-                name="dt_nascimento"
+                name="birthdate"
                 onBlur={() => {
-                  setFieldTouched('dt_nascimento');
+                  setFieldTouched('birthdate');
                 }}
                 style={[
                   Styles.textInput,
-                  errors?.dt_nascimento &&
-                    touched.dt_nascimento &&
+                  errors?.birthdate &&
+                    touched.birthdate &&
                     Styles.errorInput,
                 ]}
-                value={values.dt_nascimento}
+                value={values.birthdate}
                 keyboardType="numeric"
                 placeholder="Data de Nascimento"
-                onChangeText={handleChange('dt_nascimento')}
+                onChangeText={handleChange('birthdate')}
               />
-              {errors?.dt_nascimento && touched.dt_nascimento && (
-                <ErrorText>{errors?.dt_nascimento}</ErrorText>
-              )} */}
+              {errors?.birthdate && touched.birthdate && (
+                <ErrorText>{errors?.birthdate}</ErrorText>
+              )} 
               <Field
                 component={CustomInput}
                 name="username"

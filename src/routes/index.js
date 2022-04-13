@@ -23,8 +23,7 @@ export const screenStyles = {
 
 const Routes = () => {
   const {user} = useAuthInfoStore();
-  /*   const signed = Object.keys(user).length !== 0; */
-  const signed = true;
+  const signed = Object.keys(user).length !== 0;
   return signed ? <AppRoutes /> : <AuthRoutes />;
 };
 
