@@ -9,7 +9,7 @@ export const PlannerList = ({data}) => {
       renderItem={({item}) => (
         <PlannerCard item={item} />
       )}
-      keyExtractor={item => item?.id}
+      keyExtractor={item => item?._id}
     />
   );
 };

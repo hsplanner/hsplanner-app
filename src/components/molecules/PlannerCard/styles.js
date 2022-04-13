@@ -34,6 +34,8 @@ export const LeftSide = styled.View`
 `;
 
 export const RightSide = styled.View`
+ /*  background-color: red; */
+  align-items: flex-end;
 `;
 
 export const FirstText = styled.Text`
@@ -43,10 +45,20 @@ export const FirstText = styled.Text`
   max-width: 90%;
 `;
 
-export const ContainerDays = styled.View`
+export const StatusLabel = styled.View`
+  margin-top: 16px;
   align-items: flex-end;
   justify-content: flex-end;
   padding: 4px 16px;
   border-radius: 4px;
   background-color: ${({theme}) => theme.colors.blue};
 `;
+
+export const StatusText = styled.Text`
+  font-size: 12px;
+  color: ${({theme}) => theme.colors.white};
+  font-family: 'Montserrat-Bold';
+`;
+
+
+

@@ -73,3 +73,21 @@ export const ContainerRadio = styled.View`
   flex-direction: row;
   justify-content: flex-start;
 `;
+
+export const LoaderContainer = styled.View`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: ${({theme}) => theme.metrics.px(64)}px;
+`;
+
+export const Loader = styled.ActivityIndicator`
+  margin-bottom: ${({theme}) => theme.metrics.px(16)}px;
+`;
+
+export const LoadingMessage = styled.Text`
+  font-size: 14px;
+  color: ${({theme}) => theme.colors.blueDark};
+  font-family: 'Montserrat-SemiBold';
+`;

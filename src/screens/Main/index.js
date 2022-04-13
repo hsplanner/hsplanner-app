@@ -1,23 +1,29 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, Text, Modal } from 'react-native';
+import { View, Text, Modal, Alert } from 'react-native';
 import {RadioButton} from 'react-native-paper';
 import {Modalize} from 'react-native-modalize';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Formik, Field} from 'formik';
 import { Button, CustomInput, InputLabel, Menu, Title } from '../../components';
 import { PlannerList } from '../../components/organisms/PlannerList';
-import { Body, ContainerRadio, Header, HeaderModal, TitleModal, WrapperAddPlanner, WrapperButtonSave, WrapperModal, WrapperModalContent, WrapperModalizeContent } from './styles';
+import { Body, ContainerRadio, Header, HeaderModal, Loader, LoaderContainer, LoadingMessage, TitleModal, WrapperAddPlanner, WrapperButtonSave, WrapperModal, WrapperModalContent, WrapperModalizeContent } from './styles';
 import { colors } from '../../styles/colors';
 import { validationSchema } from './validationSchema';
+import api from '../../services/api';
+import { useAuthInfoStore, usePlannerStore } from '../../services/stores';
 
 
 export const Main = () => {
   const { navigate } = useNavigation();
   const [modalPlannerVisible, setModalPlannerVisible] = useState(false)
-  const [loadingModalize, setLoadingModalize] = useState(false);
-  const dataFetch = [
+
+  const [loadingModal, setLoadingModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { user, cleanUser } = useAuthInfoStore(); 
+  const {setPlannerList, plannerList, increasePlanner} = usePlannerStore();
+/*   const dataFetch = [
     {
       id: 'assa',
       title: 'Tito 6º ano',
@@ -28,23 +34,48 @@ export const Main = () => {
       title: 'Tito 6º ano',
       description: 'Charlot Masson'
     },
-  ]
+  ] */
+  const getPlanners = async () => {
+    try {
+      setLoading(true);
+      const result = await api.get(`/planners/${user.id}`);
+      setPlannerList(result.data);
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log('errro', {error});
+      setLoading(false);
+      return error;
+    }
+  };
+
+  useEffect(() => {
+    getPlanners()
+  }, [])
 
   async function handleSubmitForm(data) {
-      console.log('data!!', data);
-/*     setLoadingModalize(true);
-    await axios
-      .patch(
-        `https://simule-api.herokuapp.com/api/licencaPremio/${user.userId}`,
-        data,
+    console.log('data!!', data);
+    setLoadingModal(true);
+    const body = {
+      title: data.title,
+      description: data.description,
+      status: Number(data.status),
+      userId: user.id
+    }
+
+    await api
+      .post(
+        '/planner',
+        body,
       )
       .then(function (response) {
         console.log('response&&', response.data);
-        user.title = response?.data?.trabalhador?.title;
-        setUser(user);
-        modalizeRef.current?.close();
-        setLoadingModalize(false);
-
+        increasePlanner(response.data)
+        setLoadingModal(false);
+        Alert.alert(
+            `Planner ${response?.data?.title} cadastrado com sucesso` || 'Cadastro com sucesso.',
+        );
+        setModalPlannerVisible(false)
       })
       .catch(function (error) {
         console.log('erroUpdate', error);
@@ -52,9 +83,8 @@ export const Main = () => {
           error?.response?.data?.message ||
             'Ocorreu um erro ao salvar, tente novamente mais tarde.',
         );
-        setLoading(false);
-        setLoadingModalize(false);
-      }); */
+        setLoadingModal(false);
+      });
   }
 
   const initialData = {
@@ -62,6 +92,7 @@ export const Main = () => {
     description: '',
     status: '1'
   };
+
   return (
     <>
       <Header>
@@ -69,7 +100,13 @@ export const Main = () => {
         <Title ml={25}>Meus Planners</Title>
       </Header> 
       <Body>
-         <PlannerList data={dataFetch} /> 
+          {loading && (
+            <LoaderContainer>
+              <Loader size="large" color={colors.blueDark} />
+              <LoadingMessage>Carregando...</LoadingMessage>
+            </LoaderContainer>
+          )}
+         <PlannerList data={plannerList} /> 
       </Body>
 
       <WrapperAddPlanner>
@@ -141,7 +178,7 @@ export const Main = () => {
                 <Button
                   text="Salvar"
                   onPress={handleSubmit}
-                  loading={loadingModalize}
+                  loading={loadingModal}
                 />
               </WrapperButtonSave>
             </>

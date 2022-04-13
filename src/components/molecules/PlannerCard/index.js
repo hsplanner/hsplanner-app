@@ -28,7 +28,9 @@ import {
   FirstText,
   Text,
   LeftSide,
-  RightSide
+  RightSide,
+  StatusLabel,
+  StatusText
 } from './styles';
 
 export const PlannerCard = ({item}) => {
@@ -45,11 +47,14 @@ export const PlannerCard = ({item}) => {
       <CardTextMedium>Medium</CardTextMedium> */}
       </LeftSide>
       <RightSide>
-      <MaterialCommunityIcon
-        name="chevron-right"
-        size={35}
-        color={colors.blueDark}
-      />
+        <MaterialCommunityIcon
+          name="chevron-right"
+          size={35}
+          color={colors.blueDark}
+          />
+        <StatusLabel>
+          <StatusText>{item.status === 1 ? 'Privado' : 'Público'}</StatusText>
+        </StatusLabel>
       </RightSide>
 
     </CardContainer>
