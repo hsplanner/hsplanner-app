@@ -6,7 +6,8 @@ const App = createNativeStackNavigator();
 
 import {
   Main,
-  Calendar
+  Calendar,
+  Explore
 } from '../screens';
 
 const AppRoutes = () => {
@@ -19,6 +20,10 @@ const AppRoutes = () => {
       <App.Screen
         name="Main"
         component={Main}
+      />
+      <App.Screen
+        name="Explore"
+        component={Explore}
       />
       <App.Screen
         name="Calendar"

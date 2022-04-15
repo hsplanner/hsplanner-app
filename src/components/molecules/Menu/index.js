@@ -70,6 +70,46 @@ export const Menu = () => {
             <TextCpf>{user.email}</TextCpf>
           </Header>
           <Body>
+            <Column>
+            <WrapperRow>
+                <Row mb={16} mt={16}>
+                  <MaterialCommunityIcon
+                    name="account"
+                    size={35}
+                    color={colors.blueDark}
+                  />
+                  <LabelMenu>Meu Usuário</LabelMenu>
+                </Row>
+              </WrapperRow>
+              <WrapperRow>
+                <Row mb={16} mt={16}>
+                  <MaterialCommunityIcon
+                    name="account-box-multiple-outline"
+                    size={35}
+                    color={colors.blueDark}
+                    onPress={() => {
+                      setModalVisible(!modalVisible)
+                      navigator.navigate('Main')
+                    }}
+                  />
+                  <LabelMenu>Meus Planners</LabelMenu>
+                </Row>
+              </WrapperRow>
+              <WrapperRow>
+                <Row mb={16} mt={16}>
+                  <MaterialCommunityIcon
+                    name="folder-search-outline"
+                    size={35}
+                    color={colors.blueDark}
+                    onPress={() => {
+                      setModalVisible(!modalVisible)
+                      navigator.navigate('Explore')
+                    }}
+                  />
+                  <LabelMenu>Explorar</LabelMenu>
+                </Row>
+              </WrapperRow>
+            </Column>
   {/*           <Column>
               <WrapperRow>
                 <Row mb={8}>

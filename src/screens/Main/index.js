@@ -5,7 +5,8 @@ import {RadioButton} from 'react-native-paper';
 import {Formik, Field} from 'formik';
 import { Button, CustomInput, InputLabel, Menu, Title } from '../../components';
 import { PlannerList } from '../../components/organisms/PlannerList';
-import { Body, ContainerRadio, Header, HeaderModal, Loader, LoaderContainer, LoadingMessage, TitleModal, WrapperAddPlanner, WrapperButtonSave, WrapperModal, WrapperModalContent, WrapperModalizeContent } from './styles';
+import { Body, ContainerRadio, Header, HeaderModal, Loader,
+   LoaderContainer, LoadingMessage, TitleModal, WrapperAddPlanner, WrapperButtonSave, WrapperModal, WrapperModalContent, WrapperModalizeContent } from './styles';
 import { colors } from '../../styles/colors';
 import { validationSchema } from './validationSchema';
 import api from '../../services/api';

@@ -1,24 +1,3 @@
-/* import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
- */
 import React, { useState } from 'react';
 import {
   SafeAreaView,
@@ -26,13 +5,27 @@ import {
   StatusBar,
   Alert,
   ActivityIndicator,
-  Modal
+  Modal,
+  View,
+  Text
 } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import WeekView, {createFixedWeekDate} from 'react-native-week-view';
-import { Menu, Title } from '../../components';
+import { Menu, Title, CustomInput, InputLabel, Button } from '../../components';
+import { validationSchema } from './validationSchema';
+import {Formik, Field} from 'formik';
 import { colors } from '../../styles/colors';
-import { Header, WrapperModalContent } from './styles';
+import {
+  Header,
+  WrapperModalContent,
+  HeaderModal,
+  TitleModal,
+  WrapperButtonSave,
+  WrapperAddPlanner,
+  WrapperModal,
+  Row
+} from './styles';
 
 const generateDates = (hours, minutes) => {
   const date = new Date();
@@ -93,13 +86,42 @@ const MyRefreshComponent = ({style}) => (
 );
 
 export const Calendar = ({ route }) => {
-  const [modalAddEventVisible, setModalAddEventVisible] = useState(false)
-  const [eventInitialData, event] = useState(false)
-
 
   const { item } = route.params;
 
   console.log('itemINcalendar', item)
+  // DateTimePicker
+  const [initialDate, setInitialDate] = useState(new Date(1598051730000));
+  const [endDate, setEndDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChangeInitial = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setInitialDate(currentDate);
+  };
+  const onChangeEnd = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setEndDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+  // MODAL
+  const [loadingModal, setLoadingModal] = useState(false);
+  const [modalEventVisible, setModalEventVisible] = useState(false)
   const [events, setEvents] = useState(showFixedComponent ? sampleFixedEvents : sampleEvents)
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -118,8 +140,7 @@ export const Calendar = ({ route }) => {
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
   /*   day, hours, minutes = 0, seconds = 0 */
-    setModalAddEventVisible(true)
-   /*  Alert.alert(`HERE${year}-${month}-${day} ${hour}:${minutes}:${seconds}`);  */
+   Alert.alert(`HERE${year}-${month}-${day} ${hour}:${minutes}:${seconds}`); 
   };
 
   const onDragEvent = (event, newStartDate, newEndDate) => {
@@ -143,9 +164,21 @@ export const Calendar = ({ route }) => {
   };
   /*   const {events, selectedDate} = this.state; */
   console.log("events", events)
+  console.log('DatePicker', initialDate)
+  async function handleSubmitForm(data) {
+    console.log('dataForm!!', data);
+
+  }
+
+  const initialData = {
+    title: '',
+    description: '',
+    status: '1'
+  };
     return (
       <>
-        <StatusBar barStyle="dark-content" />
+      <View style={{flex: 1}}>
+         <StatusBar barStyle="dark-content" /> 
         <Header>
           <Menu />
           <Title ml={25}>{item.title}</Title>
@@ -179,27 +212,124 @@ export const Calendar = ({ route }) => {
             onDayPress={onDayPress}
             onMonthPress={onMonthPress}
           />
-          <Modal visible={modalAddEventVisible}>
-            <WrapperModalContent>
-              <HeaderModal>
-                <Title>Adicionar Planner</Title>
-                <MaterialCommunityIcon
-                  name="close"
-                  size={35}
-                  color={colors.blueDark}
-                  onPress={() => setModalAddEventVisible(false)}
-                  />
-              </HeaderModal>
-            </WrapperModalContent>
-          </Modal>
         </SafeAreaView>
-      </>
+        <WrapperAddPlanner>
+        <MaterialCommunityIcon
+          name="plus"
+          size={35}
+          color={colors.blueDark}
+          onPress={() => setModalEventVisible(true)}
+          />
+      
+        </WrapperAddPlanner>
+        </View>
+      <WrapperModal>
+        <Modal visible={modalEventVisible} >
+          <WrapperModalContent>
+          <HeaderModal>
+          <Title>Adicionar Planner</Title>
+          <MaterialCommunityIcon
+            name="close"
+            size={35}
+            color={colors.blueDark}
+            onPress={() => setModalEventVisible(false)}
+            />
+        </HeaderModal>
+        <Formik
+          validationSchema={validationSchema}
+          initialValues={initialData}
+          onSubmit={handleSubmitForm}>
+          {({
+            handleSubmit,
+            handleChange,
+            values,
+            setFieldValue,
+            setFieldTouched,
+            isValid,
+            errors,
+            touched,
+            isSubmitting,
+          }) => (
+            <>
+              <Field
+                component={CustomInput}
+                name="title"
+                placeholder="Nome do Planner"
+                label="Nome" 
+                  />
+              <Field
+                component={CustomInput}
+                name="description"
+                placeholder="Descrição"
+                label="Descrição" 
+                    />
+                
+                <Row>
+                  <Title mr={24} onPress={showDatepicker} >Data inicial</Title>
+                  <Title onPress={showTimepicker}>Hora inicial</Title>
+                </Row>
+                <Text>selected: {initialDate?.toLocaleString()}</Text>
+                {show && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={initialDate}
+                    mode={mode}
+                    is24Hour={true}
+                    onChange={onChangeInitial}
+                  />
+                    )}
+                <Row>
+                  <Title mr={24} onPress={showDatepicker}>Data final</Title>
+                  <Title onPress={showTimepicker}>Hora final</Title>
+                </Row>
+                <Text>selected: {endDate?.toLocaleString()}</Text>
+                {show && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={endDate}
+                    mode={mode}
+                    is24Hour={true}
+                    onChange={onChangeEnd}
+                  />
+                )} 
+{/*               <InputLabel style={{marginBottom: 15, marginTop: 20}}>
+                  Status
+                </InputLabel>
+                <RadioButton.Group
+                  onValueChange={handleChange('status')}
+                  value={values.status}>
+                  <ContainerRadio>
+                    <InputLabel>Privado</InputLabel>
+                    <RadioButton value="1" />
+
+                    <InputLabel>Público</InputLabel>
+                    <RadioButton value="0" />
+                  </ContainerRadio>
+                </RadioButton.Group>
+                {errors?.status && touched.status && (
+                  <ErrorText>{errors?.status}</ErrorText>
+                )} */}
+              <WrapperButtonSave>
+                <Button
+                  text="Salvar"
+                  onPress={handleSubmit}
+                  loading={loadingModal}
+                />
+              </WrapperButtonSave>
+            </>
+          )}
+        </Formik>
+          </WrapperModalContent>
+      </Modal>
+        </WrapperModal>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: '100%',
     backgroundColor: '#FFF',
   },
   header: {
