@@ -26,6 +26,7 @@ import {
   WrapperModal,
   Row
 } from './styles';
+import { date } from 'yup';
 
 const generateDates = (hours, minutes) => {
   const date = new Date();
@@ -91,10 +92,11 @@ export const Calendar = ({ route }) => {
 
   console.log('itemINcalendar', item)
   // DateTimePicker
-  const [initialDate, setInitialDate] = useState(new Date(1598051730000));
-  const [endDate, setEndDate] = useState(new Date(1598051730000));
+  const [initialDate, setInitialDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
 
   const onChangeInitial = (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -103,21 +105,26 @@ export const Calendar = ({ route }) => {
   };
   const onChangeEnd = (event, selectedDate) => {
     const currentDate = selectedDate;
-    setShow(false);
+    setShow2(false);
     setEndDate(currentDate);
   };
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
+  const showMode = (currentMode, picker) => {
+    if (picker === 1) {
+      setShow(true);
+      setMode(currentMode);
+    } else {
+      setShow2(true);
+      setMode(currentMode);
+    }
   };
 
-  const showDatepicker = () => {
-    showMode('date');
+  const showDatepicker = (picker) => {
+    showMode('date', picker);
   };
 
-  const showTimepicker = () => {
-    showMode('time');
+  const showTimepicker = (picker) => {
+    showMode('time', picker);
   };
   // MODAL
   const [loadingModal, setLoadingModal] = useState(false);
@@ -163,13 +170,26 @@ export const Calendar = ({ route }) => {
     console.log('Month: ', date, formattedDate);
   };
   /*   const {events, selectedDate} = this.state; */
-  console.log("events", events)
-  console.log('DatePicker', initialDate)
+/*   console.log("events", events) */
+  console.log('DatePickerInitial', initialDate)
+  console.log('DatePickerEnd', endDate)
   async function handleSubmitForm(data) {
     console.log('dataForm!!', data);
+    const eventNew = {
+      id: 35,
+      description: data.description,
+      startDate: initialDate,
+      endDate: endDate,
+      color: data.color
+    }
+    setEvents([
+      ...events,
+      eventNew
+    ])
+    console.log('eventNew', eventNew)
 
   }
-
+  console.log('events', events)
   const initialData = {
     title: '',
     description: '',
@@ -253,10 +273,10 @@ export const Calendar = ({ route }) => {
             <>
               <Field
                 component={CustomInput}
-                name="title"
-                placeholder="Nome do Planner"
-                label="Nome" 
-                  />
+                name="color"
+                placeholder="Cor"
+                label="Cor" 
+              />
               <Field
                 component={CustomInput}
                 name="description"
@@ -265,8 +285,8 @@ export const Calendar = ({ route }) => {
                     />
                 
                 <Row>
-                  <Title mr={24} onPress={showDatepicker} >Data inicial</Title>
-                  <Title onPress={showTimepicker}>Hora inicial</Title>
+                  <Title mr={24} onPress={() => showDatepicker(1)} >Data inicial</Title>
+                  <Title onPress={() => showTimepicker(1)}>Hora inicial</Title>
                 </Row>
                 <Text>selected: {initialDate?.toLocaleString()}</Text>
                 {show && (
@@ -275,15 +295,15 @@ export const Calendar = ({ route }) => {
                     value={initialDate}
                     mode={mode}
                     is24Hour={true}
-                    onChange={onChangeInitial}
+                    onChange={onChangeInitial}    
                   />
                     )}
                 <Row>
-                  <Title mr={24} onPress={showDatepicker}>Data final</Title>
-                  <Title onPress={showTimepicker}>Hora final</Title>
+                  <Title mr={24} onPress={() => showDatepicker(2)}>Data final</Title>
+                  <Title onPress={() => showTimepicker(2)}>Hora final</Title>
                 </Row>
                 <Text>selected: {endDate?.toLocaleString()}</Text>
-                {show && (
+                {show2 && (
                   <DateTimePicker
                     testID="dateTimePicker"
                     value={endDate}
@@ -291,7 +311,7 @@ export const Calendar = ({ route }) => {
                     is24Hour={true}
                     onChange={onChangeEnd}
                   />
-                )} 
+                )}  
 {/*               <InputLabel style={{marginBottom: 15, marginTop: 20}}>
                   Status
                 </InputLabel>
