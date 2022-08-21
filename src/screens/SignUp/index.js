@@ -6,7 +6,8 @@ import {useNavigation} from '@react-navigation/native';
 import {Formik, Field} from 'formik';
 import {TextInputMask} from 'react-native-masked-text';
 /* import DropdownAlert from 'react-native-dropdownalert'; */
-/* import {parse, formatISO} from 'date-fns'; */
+import {parse, formatISO} from 'date-fns';
+import moment from 'moment';
 
 import {
   CustomInput,
@@ -56,15 +57,18 @@ export const SignUp = () => {
   const handleSubmitForm = async values => {
     try {
       setLoading(true)
+      let iso = formatISO(parse(values.birthdate, 'dd/MM/yyyy', new Date()))
+      const birthFormatToMongo= moment(iso).format('YYYY-MM-DD[T00:00:00.000Z]')
       const body = {
         name: values.name,
         email: values.email,
-        birthdate: values.birthdate,
+        birthdate: birthFormatToMongo,
         username: values.username,
         passwordHash: values.password,
         userType: 1
       }
       console.log('values$$', values)
+      console.log('values$$2', birthFormatToMongo)
       const result = await api.post('/user', body);
       console.log('Cadastrou', result.data);
       setLoading(false)

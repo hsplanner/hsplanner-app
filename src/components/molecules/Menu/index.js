@@ -98,6 +98,20 @@ export const Menu = () => {
               <WrapperRow>
                 <Row mb={16} mt={16}>
                   <MaterialCommunityIcon
+                    name="account-multiple"
+                    size={35}
+                    color={colors.blueDark}
+                    onPress={() => {
+                      setModalVisible(!modalVisible)
+                      navigator.navigate('Students')
+                    }}
+                  />
+                  <LabelMenu>Estudantes</LabelMenu>
+                </Row>
+              </WrapperRow>
+              <WrapperRow>
+                <Row mb={16} mt={16}>
+                  <MaterialCommunityIcon
                     name="folder-search-outline"
                     size={35}
                     color={colors.blueDark}
