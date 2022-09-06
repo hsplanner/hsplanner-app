@@ -68,5 +68,13 @@ export const StatusText = styled.Text`
   font-family: 'Montserrat-Bold';
 `;
 
+export const BorderTrash = styled.View`
+  border: 0.8px solid rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #D9E6F2;
+`;
+
+
 
 

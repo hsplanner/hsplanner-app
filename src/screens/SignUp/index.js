@@ -65,9 +65,9 @@ export const SignUp = () => {
         birthdate: birthFormatToMongo,
         username: values.username,
         passwordHash: values.password,
-        userType: 1
+        userType: "1"
       }
-      console.log('values$$', values)
+      console.log('body', body)
       console.log('values$$2', birthFormatToMongo)
       const result = await api.post('/user', body);
       console.log('Cadastrou', result.data);
@@ -75,6 +75,7 @@ export const SignUp = () => {
       Alert.alert('Usuário cadatrado com sucesso.');
       navigate('SignIn');
     } catch (erro) {
+      console.log(erro)
       setLoading(false);
       console.log('erro', erro?.message || erro);
     } 
@@ -118,6 +119,7 @@ export const SignUp = () => {
                 name="email"
                 label="Email"
                 placeholder="Email"
+                autoCapitalize="none"
               />
                <Text mt={8} mb={4} ml={4}>
                 Data de Nascimento
@@ -151,12 +153,14 @@ export const SignUp = () => {
                 name="username"
                 label="Usuário"
                 placeholder="Usuário"
+                autoCapitalize="none"
               />
               <Field
                 component={CustomInput}
                 name="password"
                 label="Senha"
                 placeholder="Senha"
+                autoCapitalize="none"
               />
               <Button
                 style={{marginTop: 16}}

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, Text, Modal, Alert } from 'react-native';
+import { View, Text, Modal, Alert, SafeAreaView } from 'react-native';
 import {RadioButton} from 'react-native-paper';
 import {Formik, Field} from 'formik';
 import { Button, CustomInput, InputLabel, Menu, Title } from '../../components';
@@ -80,7 +80,7 @@ export const Main = () => {
   };
 
   return (
-    <>
+    <SafeAreaView style={{flex: 1}}>
       <Header>
         <Menu />
         <Title ml={25}>Meus Planners</Title>
@@ -95,14 +95,17 @@ export const Main = () => {
          <PlannerList data={plannerList} /> 
       </Body>
 
-      <WrapperAddPlanner>
-        <MaterialCommunityIcon
-          name="plus"
-          size={35}
-          color={colors.blueDark}
-          onPress={() => setModalPlannerVisible(true)}
-        />
-      </WrapperAddPlanner>
+      
+
+        <WrapperAddPlanner>
+          <MaterialCommunityIcon
+            name="plus"
+            size={35}
+            color={colors.blueDark}
+            onPress={() => setModalPlannerVisible(true)}
+          />
+        </WrapperAddPlanner>
+
       <WrapperModal>
         <Modal visible={modalPlannerVisible} >
           <WrapperModalContent>
@@ -174,8 +177,8 @@ export const Main = () => {
         
       </Modal>
       </WrapperModal>
+            </SafeAreaView> 
 
 
-    </>
   )
 }

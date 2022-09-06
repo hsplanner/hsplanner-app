@@ -33,7 +33,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <NavigationContainer>
-        <StatusBar barStyle="dark-content" backgroundColor="#f4f4f4" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
         <View style={{flex: 1, backgroundColor: '#f8f8f8'}}>
           <Provider>
              <Routes />

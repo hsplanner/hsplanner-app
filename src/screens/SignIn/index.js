@@ -101,6 +101,7 @@ export const SignIn = () => {
                     name="username"
                     placeholder="Usuário"
                     label="Usuário"
+                    autoCapitalize="none"
                   />
                   <Field
                     component={CustomInput}
@@ -108,6 +109,7 @@ export const SignIn = () => {
                     placeholder="Senha"
                     label="Senha"
                     secureTextEntry={true}
+                    autoCapitalize="none"
                   />
                   <Button
                     style={{marginTop: 16}}

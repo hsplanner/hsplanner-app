@@ -187,6 +187,7 @@ export const Calendar = ({ route }) => {
       eventNew
     ])
     console.log('eventNew', eventNew)
+    setModalEventVisible(false)
 
   }
   console.log('events', events)
@@ -210,7 +211,7 @@ export const Calendar = ({ route }) => {
             }}
             events={events}
             selectedDate={selectedDate}
-            numberOfDays={7}
+            numberOfDays={3}
             onEventPress={onEventPress}
             onGridClick={onGridClick}
             headerStyle={styles.header}
@@ -240,7 +241,6 @@ export const Calendar = ({ route }) => {
           color={colors.blueDark}
           onPress={() => setModalEventVisible(true)}
           />
-      
         </WrapperAddPlanner>
         </View>
       <WrapperModal>

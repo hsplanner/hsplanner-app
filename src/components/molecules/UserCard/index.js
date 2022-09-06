@@ -31,7 +31,8 @@ import {
   RightSide,
   StatusLabel,
   StatusText,
-  Circle
+  Circle,
+  BorderTrash
 } from './styles';
 
 export const UserCard = ({item}) => {
@@ -50,11 +51,14 @@ export const UserCard = ({item}) => {
         </RightSide>
       </LeftSide>
       <RightSide>
+        <BorderTrash>
         <MaterialCommunityIcon
-          name="chevron-right"
-          size={35}
-          color={colors.blueDark}
+          name="trash-can-outline"
+          size={22}
+          color={colors.danger}
           />
+        </BorderTrash>
+
       </RightSide>
     </CardContainer>
   );

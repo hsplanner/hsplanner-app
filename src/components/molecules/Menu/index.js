@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Modal, View} from 'react-native';
+import {Modal, SafeAreaView, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuthInfoStore} from '../../../services/stores';
 import {IconButton, Text} from '../../atoms';
@@ -55,6 +55,7 @@ export const Menu = () => {
         onPress={() => setModalVisible(!modalVisible)}
       />
       <Modal visible={modalVisible} transparent animationType="fade">
+
         <Container>
           <Header>
             <CloseModal>
@@ -124,50 +125,6 @@ export const Menu = () => {
                 </Row>
               </WrapperRow>
             </Column>
-  {/*           <Column>
-              <WrapperRow>
-                <Row mb={8}>
-                  <MaterialCommunityIcon
-                    name="account"
-                    size={35}
-                    color={colors.blueDark}
-                  />
-                  <LabelMenu onPress={handleUpdateUser}>Usuário</LabelMenu>
-                </Row>
-              </WrapperRow>
-
-              <WrapperColumn>
-                <Row mt={8}>
-                  <MaterialCommunityIcon
-                    name="face-man"
-                    size={35}
-                    color={colors.blueDark}
-                  />
-                  <LabelMenu>Consultoria</LabelMenu>
-                </Row>
-
-                <DataInfoMedium mt={8} mb={2}>
-                  Celso Colacci
-                </DataInfoMedium>
-                <Row>
-                  <MaterialCommunityIcon
-                    name="whatsapp"
-                    size={24}
-                    color={colors.blueDark}
-                  />
-                  <DataInfoShort>(61) 9849-1212</DataInfoShort>
-                </Row>
-                <Row mb={8}>
-                  <MaterialCommunityIcon
-                    name="email-outline"
-                    size={24}
-                    color={colors.blueDark}
-                  />
-                  <DataInfoShort>celso@inova10.com</DataInfoShort>
-                </Row>
-              </WrapperColumn>
-            </Column> */}
-
             <WrapperSignOut>
               <MaterialIcon
                 name="logout"
@@ -179,8 +136,8 @@ export const Menu = () => {
               <TextSignOut onPress={signOut}>Sair</TextSignOut>
             </WrapperSignOut>
           </Body>
-        </Container>
+       </Container>
       </Modal>
-    </>
+      </>
   );
 };

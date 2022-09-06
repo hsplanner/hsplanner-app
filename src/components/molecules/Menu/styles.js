@@ -76,13 +76,16 @@ export const CloseButton = styled.Text`
 export const Header = styled.View`
   align-self: flex-start;
   padding-left: 8px;
+  padding-top: 32px;
+  padding-bottom: 8px;
   background-color: ${({theme}) => theme.colors.blueDark};
   width: 100%;
-  height: 120px;
+  height: 18%;
 
   border-right-width:0;
   border-left-width:0;
   border-width: 1;
+  border-top-width: 0;
   border-radius: 2;
   border-color: #ddd;
   shadow-color: #000;
@@ -143,5 +146,5 @@ export const TextSignOut = styled.Text`
 export const WrapperSignOut = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 32px;
 `;
