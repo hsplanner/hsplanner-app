@@ -8,7 +8,8 @@ import {
   Main,
   Calendar,
   Explore,
-  Students
+  Students,
+  SignUp
 } from '../screens';
 
 const AppRoutes = () => {
@@ -34,6 +35,7 @@ const AppRoutes = () => {
         name="Students"
         component={Students}
       />
+      <App.Screen name="SignUp" component={SignUp} />
     </App.Navigator>
   );
 };

@@ -60,6 +60,7 @@ export const HeaderModal = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
+  margin-top: 24px;
 `;
 
 export const WrapperButtonSave = styled.View`

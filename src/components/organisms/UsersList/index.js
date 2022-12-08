@@ -20,9 +20,10 @@ export const UserList = ({data}) => {
     username: "@rochawesley"
   },
 ]
+  console.log("Data", data)
   return (
     <UserListContainer
-      data={data2}
+      data={data}
       renderItem={({item}) => (
         <UserCard item={item} />
       )}

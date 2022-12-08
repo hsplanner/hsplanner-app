@@ -197,7 +197,7 @@ export const Calendar = ({ route }) => {
     status: '1'
   };
     return (
-      <>
+      <SafeAreaView style={{flex: 1}}>
       <View style={{flex: 1}}>
          <StatusBar barStyle="dark-content" /> 
         <Header>
@@ -206,9 +206,9 @@ export const Calendar = ({ route }) => {
         </Header>
         <SafeAreaView style={styles.container}>
           <WeekView
-            ref={r => {
-              componentRef = r;
-            }}
+            // ref={r => {
+            //   componentRef = r;
+            // }}
             events={events}
             selectedDate={selectedDate}
             numberOfDays={3}
@@ -247,7 +247,8 @@ export const Calendar = ({ route }) => {
         <Modal visible={modalEventVisible} >
           <WrapperModalContent>
           <HeaderModal>
-          <Title>Adicionar Planner</Title>
+          <Title>Adicionar Atividade
+          </Title>
           <MaterialCommunityIcon
             name="close"
             size={35}
@@ -275,14 +276,15 @@ export const Calendar = ({ route }) => {
                 component={CustomInput}
                 name="color"
                 placeholder="Cor"
-                label="Cor" 
+                label="Cor"
+                autoCapitalize="none"
               />
               <Field
                 component={CustomInput}
                 name="description"
                 placeholder="Descrição"
                 label="Descrição" 
-                    />
+              />
                 
                 <Row>
                   <Title mr={24} onPress={() => showDatepicker(1)} >Data inicial</Title>
@@ -293,6 +295,7 @@ export const Calendar = ({ route }) => {
                   <DateTimePicker
                     testID="dateTimePicker"
                     value={initialDate}
+                    modal
                     mode={mode}
                     is24Hour={true}
                     onChange={onChangeInitial}    
@@ -342,7 +345,7 @@ export const Calendar = ({ route }) => {
           </WrapperModalContent>
       </Modal>
         </WrapperModal>
-        </>
+        </SafeAreaView>
     );
 }
 

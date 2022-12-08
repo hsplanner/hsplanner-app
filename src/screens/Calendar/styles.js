@@ -38,7 +38,7 @@ export const WrapperAddPlanner = styled.View`
   elevation: 3;
 `;
 
-export const WrapperModal = styled.View`
+export const WrapperModal = styled.SafeAreaView`
     justify-content: center;
     align-items: center;
     margin-top: 22px;
@@ -51,6 +51,7 @@ export const WrapperModalContent = styled.View`
 `;
 
 export const HeaderModal = styled.View`
+  margin-top: 24px;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;

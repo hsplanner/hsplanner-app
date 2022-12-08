@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 import {RadioButton} from 'react-native-paper';
 import {ScrollView, Alert} from 'react-native';
 import axios from 'axios';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {Formik, Field} from 'formik';
 import {TextInputMask} from 'react-native-masked-text';
 /* import DropdownAlert from 'react-native-dropdownalert'; */
@@ -22,10 +22,15 @@ import {ScreenContainer, ContentForm, ImageTop, ContainerRadio} from './styles';
 import {validationSchema} from './validationSchema';
 import logo from '../../assets/img/logo.png';
 import api from '../../services/api'
+import { useAuthInfoStore } from '../../services/stores';
 
 export const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const {navigate} = useNavigation();
+  const { params } = useRoute()
+  const {user} = useAuthInfoStore(); 
+
+  
 
   let dropDownAlertRef = useRef();
 
@@ -54,6 +59,9 @@ export const SignUp = () => {
     navigate('SignIn');
   };
 
+  console.log("?", params?.fromStudents)
+  console.log("user", user)
+
   const handleSubmitForm = async values => {
     try {
       setLoading(true)
@@ -65,7 +73,8 @@ export const SignUp = () => {
         birthdate: birthFormatToMongo,
         username: values.username,
         passwordHash: values.password,
-        userType: "1"
+        userType: params?.fromStudents ? user?.userType : 0,
+        idTutor: user?.id || ""
       }
       console.log('body', body)
       console.log('values$$2', birthFormatToMongo)
@@ -73,7 +82,7 @@ export const SignUp = () => {
       console.log('Cadastrou', result.data);
       setLoading(false)
       Alert.alert('Usuário cadatrado com sucesso.');
-      navigate('SignIn');
+      params?.fromStudents ? navigate('Students') : navigate('SignIn') 
     } catch (erro) {
       console.log(erro)
       setLoading(false);
