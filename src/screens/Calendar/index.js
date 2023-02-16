@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import moment from 'moment';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,7 +8,8 @@ import {
   ActivityIndicator,
   Modal,
   View,
-  Text
+  Text,
+  Picker
 } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -15,6 +17,7 @@ import WeekView, {createFixedWeekDate} from 'react-native-week-view';
 import { Menu, Title, CustomInput, InputLabel, Button } from '../../components';
 import { validationSchema } from './validationSchema';
 import {Formik, Field} from 'formik';
+import api from '../../services/api';
 import { colors } from '../../styles/colors';
 import {
   Header,
@@ -27,6 +30,7 @@ import {
   Row
 } from './styles';
 import { date } from 'yup';
+import { endEvent } from 'react-native/Libraries/Performance/Systrace';
 
 const generateDates = (hours, minutes) => {
   const date = new Date();
@@ -86,6 +90,7 @@ const MyRefreshComponent = ({style}) => (
   <ActivityIndicator style={style} color="red" size="large" />
 );
 
+
 export const Calendar = ({ route }) => {
 
   const { item } = route.params;
@@ -97,6 +102,99 @@ export const Calendar = ({ route }) => {
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
+  const [loading, setLoading] = useState(false);
+    // MODAL
+  const [loadingModal, setLoadingModal] = useState(false);
+  const [modalEventVisible, setModalEventVisible] = useState(false)
+  // const [events, setEvents] = useState(showFixedComponent ? sampleFixedEvents : sampleEvents)
+  const [events, setEvents] = useState([])
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // Select
+  const [selectedValue, setSelectedValue] = useState(3);
+
+  const getPlanner = async () => {
+    try {
+      setLoading(true);
+      const result = await api.get(`/planner/${item?._id}`);
+      console.log("eventsServer", result.data?.events)
+      const eventsResponse = result.data?.events
+      console.log("response", eventsResponse)
+      const eventsResponseFormatted = eventsResponse?.map((event) => ({
+        id: event._id,
+        description: event.description,
+        startDate: new Date(event.startDate),
+        endDate: new Date(event.endDate),
+        color: event.color
+      }))
+
+      console.log("formattted", eventsResponseFormatted)
+
+      setEvents(eventsResponseFormatted);
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log('errro', {error});
+      setLoading(false);
+      return error;
+    }
+  };
+
+  const onDelete = async (eventId) => {
+    try {
+      setLoading(true);
+      console.log("chegou Delete New")
+      const body = {
+        plannerId : item?._id,
+        eventId: eventId
+      }
+      console.log("bodyDelte", body)
+      const result = await api.delete(`/planner/event`, {data: body});
+      await getPlanner()
+      console.log("resultDeleteNew", result?.data)
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log('errroDelete', {error});
+      setLoading(false);
+      return error;
+    }
+  };
+
+  const onUpdate = async (eventId, startDate, endDate, event) => {
+    try {
+      setLoading(true);
+      console.log("chegou Delete New")
+      const body = {
+        description: event?.description,
+        color: event?.color,
+        startDate,
+        endDate,
+        eventId: eventId
+      }
+      console.log("bodyUpdate", body)
+      console.log("idPlanning", item?._id)
+      const result = await api.patch(`/event/${item?._id}`, body);
+      console.log("resultUp", result?.data)
+      
+      // await getPlanner()
+
+      console.log("finishUPdate")
+
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log("erroUpdate")
+
+      console.log('errroDelete', {error});
+      setLoading(false);
+      return error;
+    }
+  };
+
+   useEffect(() => {
+     getPlanner()
+   },[])
 
   const onChangeInitial = (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -126,16 +224,23 @@ export const Calendar = ({ route }) => {
   const showTimepicker = (picker) => {
     showMode('time', picker);
   };
-  // MODAL
-  const [loadingModal, setLoadingModal] = useState(false);
-  const [modalEventVisible, setModalEventVisible] = useState(false)
-  const [events, setEvents] = useState(showFixedComponent ? sampleFixedEvents : sampleEvents)
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const onEventPress = ({id, color, startDate, endDate}) => {
+
+  const onEventPress = ({id, color, startDate, endDate, description}) => {
     Alert.alert(
-      `event ${color} - ${id}`,
-      `start: ${startDate}\nend: ${endDate}`,
+      `${description}`,
+      `Inicio: ${moment(startDate).format('DD/MM - h:mm a')}\nFim: ${moment(endDate).format('DD/MM - h:mm a')}`,
+    [
+      {
+        text: 'Excluir',
+        onPress: () => onDelete(id),
+        style: 'cancel',
+      },
+      {
+      text: 'Cancel',
+      onPress: () => console.log('Cancel Pressed'),
+      style: 'cancel',
+    }]
     );
   };
 
@@ -150,16 +255,18 @@ export const Calendar = ({ route }) => {
    Alert.alert(`HERE${year}-${month}-${day} ${hour}:${minutes}:${seconds}`); 
   };
 
-  const onDragEvent = (event, newStartDate, newEndDate) => {
+  const onDragEvent = async (event, newStartDate, newEndDate) => {
     // Here you should update the event in your DB with the new date and hour
-    setEvents([
-      ...events.filter(e => e.id !== event.id),
-      {
-        ...event,
-        startDate: newStartDate,
-        endDate: newEndDate,
-      },
-    ])
+    await onUpdate(event.id, newStartDate, newEndDate, event )
+    // setEvents([
+    //   ...events.filter(e => e.id !== event.id),
+    //   {
+    //     ...event,
+    //     startDate: newStartDate,
+    //     endDate: newEndDate,
+    //   },
+    // ])
+    await getPlanner()
   };
 
   const onDayPress = (date, formattedDate) => {
@@ -169,28 +276,44 @@ export const Calendar = ({ route }) => {
   const onMonthPress = (date, formattedDate) => {
     console.log('Month: ', date, formattedDate);
   };
-  /*   const {events, selectedDate} = this.state; */
-/*   console.log("events", events) */
-  console.log('DatePickerInitial', initialDate)
-  console.log('DatePickerEnd', endDate)
-  async function handleSubmitForm(data) {
-    console.log('dataForm!!', data);
-    const eventNew = {
-      id: 35,
-      description: data.description,
-      startDate: initialDate,
-      endDate: endDate,
-      color: data.color
+
+  const handleSubmitForm = async (data) =>{
+  
+    try {
+      const eventNew = {
+        // id: 35,
+        description: data.description,
+        startDate: initialDate,
+        endDate: endDate,
+        color: data.color,
+        plannerId: item?._id
+      }
+      console.log("eventNew", eventNew)
+      await api.patch('/planner', eventNew);
+      await getPlanner()
+
+      // const newEventFormatted = {
+      //   id: 35,
+      //   description: data.description,
+      //   startDate: initialDate,
+      //   endDate: endDate,
+      //   color: data.color,
+      // }
+  
+      // setEvents([
+      //   ...events,
+      //   newEventFormatted
+      // ])
+    } catch (error) {
+      Alert.alert(
+        error?.response?.data?.message ||
+        'Ocorreu um erro, tente novamente mais tarde.'
+      );
     }
-    setEvents([
-      ...events,
-      eventNew
-    ])
-    console.log('eventNew', eventNew)
     setModalEventVisible(false)
 
   }
-  console.log('events', events)
+
   const initialData = {
     title: '',
     description: '',
@@ -203,6 +326,16 @@ export const Calendar = ({ route }) => {
         <Header>
           <Menu />
           <Title ml={25}>{item.title}</Title>
+          <Picker
+            selectedValue={selectedValue}
+            style={{ height: 50, width: 150 }}
+            onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+            mode="dropdown"
+          >
+        <Picker.Item label="1 Dia" value={1} />
+        <Picker.Item label="3 Dias" value={3} />
+        <Picker.Item label="7 Dias" value={7} />
+      </Picker>
         </Header>
         <SafeAreaView style={styles.container}>
           <WeekView
@@ -211,7 +344,7 @@ export const Calendar = ({ route }) => {
             // }}
             events={events}
             selectedDate={selectedDate}
-            numberOfDays={3}
+            numberOfDays={selectedValue}
             onEventPress={onEventPress}
             onGridClick={onGridClick}
             headerStyle={styles.header}
@@ -290,7 +423,7 @@ export const Calendar = ({ route }) => {
                   <Title mr={24} onPress={() => showDatepicker(1)} >Data inicial</Title>
                   <Title onPress={() => showTimepicker(1)}>Hora inicial</Title>
                 </Row>
-                <Text>selected: {initialDate?.toLocaleString()}</Text>
+                <Text>{moment(initialDate).format('DD/MM - h:mm a')}</Text>
                 {show && (
                   <DateTimePicker
                     testID="dateTimePicker"
@@ -305,7 +438,7 @@ export const Calendar = ({ route }) => {
                   <Title mr={24} onPress={() => showDatepicker(2)}>Data final</Title>
                   <Title onPress={() => showTimepicker(2)}>Hora final</Title>
                 </Row>
-                <Text>selected: {endDate?.toLocaleString()}</Text>
+                <Text>{moment(endDate).format('DD/MM - h:mm a')}</Text>
                 {show2 && (
                   <DateTimePicker
                     testID="dateTimePicker"

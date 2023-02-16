@@ -66,13 +66,14 @@ export const HeaderModal = styled.View`
 export const WrapperButtonSave = styled.View`
   flex: 1;
   width: 100%;
-  margin-top: 12px;
+  margin-top: 32px;
 `;
 
 export const ContainerRadio = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: center;
 `;
 
 export const LoaderContainer = styled.View`

@@ -46,7 +46,7 @@ export const Main = () => {
       title: data.title,
       description: data.description,
       status: Number(data.status),
-      userId: user.id
+      idTutor: user.id
     }
 
     await api
@@ -79,6 +79,8 @@ export const Main = () => {
     status: '1'
   };
 
+
+  console.log("plannerList", plannerList)
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header>
@@ -94,9 +96,7 @@ export const Main = () => {
           )}
          <PlannerList data={plannerList} /> 
       </Body>
-
-      
-
+    
         <WrapperAddPlanner>
           <MaterialCommunityIcon
             name="plus"
@@ -110,7 +110,7 @@ export const Main = () => {
         <Modal visible={modalPlannerVisible} >
           <WrapperModalContent>
           <HeaderModal>
-          <Title>Adicionar Planner</Title>
+          <Title mb={32}>Adicionar Planner</Title>
           <MaterialCommunityIcon
             name="close"
             size={35}
@@ -146,7 +146,7 @@ export const Main = () => {
                 placeholder="Descrição"
                 label="Descrição" 
                   />
-              <InputLabel style={{marginBottom: 15, marginTop: 20}}>
+              <InputLabel style={{marginBottom: 16, marginTop: 20}}>
                   Status
                 </InputLabel>
                 <RadioButton.Group

@@ -54,8 +54,9 @@ export const SignIn = () => {
       username: values.username,
       passwordHash: values.password 
     }
+  console.log("bodyLogin", body)
    setLoading(true);
-    api
+    await api
       .post('/login', body)
       .then(async function (response) {
         console.log('respLogin', response?.data);
@@ -67,9 +68,10 @@ export const SignIn = () => {
         );
       })
       .catch(function (error) {
-        console.log('erroPost', error);
+        console.log('erroPost', error?.message);
         Alert.alert(
-          'Ocorreu um erro ao Logar, verifique suas credenciais ou tente novamente mais tarde.',
+          error?.response?.data?.message ||
+          'Ocorreu um erro ao logar, tente novamente mais tarde.'
         );
         setLoading(false);
       }); 

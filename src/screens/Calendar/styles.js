@@ -7,6 +7,7 @@ export const Header = styled.View`
   align-items: center;
   flex-direction: row;
   padding-left: 12px;
+  justify-content: space-between;
 `;
 
 export const TitleModal = styled.Text`
@@ -65,4 +66,5 @@ export const WrapperButtonSave = styled.View`
 
 export const Row = styled.View`
   flex-direction: row;
+  margin-top: 12px;
 `;

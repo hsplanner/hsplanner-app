@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextInput, StyleSheet} from 'react-native';
+import {TextInput, StyleSheet, View} from 'react-native';
 import {Text} from '../../../components';
 import {Styles} from '../../../styles/input';
 import {ErrorText} from '../../atoms';
@@ -15,7 +15,7 @@ export const CustomInput = props => {
   const hasError = errors[name] && touched[name];
 
   return (
-    <>
+    <View style={{ width: "100%"}}>
       {label && (
         <Text mt={5} mb={4} ml={4}>
           {label}
@@ -32,6 +32,6 @@ export const CustomInput = props => {
         {...inputProps}
       />
       {hasError && <ErrorText>{errors[name]}</ErrorText>}
-    </>
+    </View>
   );
 };
