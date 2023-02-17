@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import {colors} from '../../../styles/colors';
 import Moment from 'moment';
@@ -37,32 +38,35 @@ import {
 } from './styles';
 import api from '../../../services/api';
 import { useAuthInfoStore } from '../../../services/stores';
-import { Alert } from 'react-native';
 
-export const UserCard = ({item}) => {
+export const UserAddCard = ({item}) => {
   const {navigate} = useNavigation();
   const [loading, setLoading] = useState(false);
 
   const { user } = useAuthInfoStore(); 
 
-  const approveTutor = async () => {
+  const addStudent = async () => {
     try {
 
-      console.log("CHEGOU APROVAR")
+      console.log("CHEGOU ADICIONAR")
       setLoading(true);
 
       const body = {
-        idTutor: item?.idTutor,
-        idAluno: user?.id
+        idTutor: user?.id
       }
-      console.log("approve", body)
-      const result = await api.patch(`/student`, body);
-      Alert.alert("Tutor aprovado com sucesso ")
-      navigate('Main')
+      console.log("addStudent", body)
+      const result = await api.patch(`/user/${item.username}`, body);
+      console.log("resultAddStudent", result?.data)
+      Alert.alert('Usuário cadatrado com sucesso.');
       setLoading(false);
       return;
     } catch (error) {
       console.log('approveError', {error});
+      console.log('addStudentError', error?.response?.data);
+      Alert.alert(
+          error?.response?.data?.message ||
+             'Erro ao adicionar estudante',
+         );
       setLoading(false);
       return error;
     }
@@ -70,33 +74,34 @@ export const UserCard = ({item}) => {
   
   return (
     <CardContainer onPress={() => {}}>
-      <LeftSide>
-        <LeftSide>
-          <Circle>
-            <CardTextLarge>{item.name.charAt(0)}</CardTextLarge>
-          </Circle>
-        </LeftSide>
+      {item && (
+        <>
+          <LeftSide>
+            <LeftSide>
+              <Circle>
+                <CardTextLarge>{item?.name?.charAt(0)}</CardTextLarge>
+              </Circle>
+            </LeftSide>
+            <RightSide>
+            <CardTextMediumBold>{item?.name}</CardTextMediumBold>
+            <CardTextSmall>@{item?.username}</CardTextSmall>
+            </RightSide>
+          </LeftSide>
         <RightSide>
-        <CardTextMediumBold>{item.name}</CardTextMediumBold>
-        <CardTextSmall>@{item.username}</CardTextSmall>
-        </RightSide>
-      </LeftSide>
-      <RightSide>
-        {item.ativo === 0 ? ( 
+
         <BorderTrash>
-          <MaterialCommunityIcon
-            onPress={approveTutor}
-            name="check"
-            size={22}
-            color={colors.green}
-            />
-        </BorderTrash> 
-      ): (
-        <StatusLabel>
-          <StatusText>Ativo</StatusText>
-      </StatusLabel>
-      )}
+        <MaterialCommunityIcon
+          onPress={addStudent}
+          name="plus"
+          size={22}
+          color={colors.green}
+          />
+        </BorderTrash>
+
       </RightSide>
+    </>
+      )}
+
     </CardContainer>
   );
 };

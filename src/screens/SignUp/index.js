@@ -73,7 +73,7 @@ export const SignUp = () => {
         birthdate: birthFormatToMongo,
         username: values.username,
         passwordHash: values.password,
-        userType: params?.fromStudents ? user?.userType : 0,
+        userType: params?.fromStudents ? 1 : 0,
         idTutor: user?.id || ""
       }
       console.log('body', body)

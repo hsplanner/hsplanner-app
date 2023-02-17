@@ -1,8 +1,8 @@
 import React from 'react';
-import {UserCard} from '../../molecules';
+import {UserCardStudent} from '../../molecules';
 import {UserListContainer} from './styles';
 
-export const UserList = ({data}) => {
+export const UserListStudent = ({data}) => {
   const data2 = [{
     name: "John Júnior",
     username: "@iamjohn"
@@ -25,7 +25,7 @@ export const UserList = ({data}) => {
     <UserListContainer
       data={data}
       renderItem={({item}) => (
-        <UserCard item={item} />
+        <UserCardStudent item={item} />
       )}
       keyExtractor={item => item?._id}
     />

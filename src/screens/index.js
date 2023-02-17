@@ -4,3 +4,7 @@ export * from './SignUp';
 export * from './Calendar';
 export * from './Explore';
 export * from './Students';
+export * from './Tutors';
+export * from './ChoiceSignUp';
+export * from './AddUser';
+export * from './MyUser';

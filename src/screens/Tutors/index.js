@@ -1,9 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { useIsFocused } from "@react-navigation/native";
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { View, Text, Modal, Alert, SafeAreaView } from 'react-native';
 import {RadioButton} from 'react-native-paper';
-import { Button, CustomInput, InputLabel, Menu, Title, UserListStudent } from '../../components';
+import { Button, CustomInput, InputLabel, Menu, Title, UserList } from '../../components';
 import { PlannerList } from '../../components/organisms/PlannerList';
 import { Body, ContainerRadio, Header, HeaderModal, Loader,
    LoaderContainer, LoadingMessage, TitleModal, WrapperAddPlanner, WrapperButtonSave, WrapperModal, WrapperModalContent, WrapperModalizeContent } from './styles';
@@ -13,21 +12,21 @@ import { useAuthInfoStore } from '../../services/stores';
 import { useNavigation } from '@react-navigation/native';
 
 
-export const Students = () => {
+export const Tutors = () => {
   const [modalPlannerVisible, setModalPlannerVisible] = useState(false)
   const {navigate} = useNavigation()
 
   const [loadingModal, setLoadingModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [students, setStudents] = useState([]);
+  const [tutors, setTutors] = useState([]);
   const { user } = useAuthInfoStore(); 
   // const {setPlannerList, plannerList, increasePlanner} = usePlannerStore();
 
-  const getStudents = async () => {
+  const getTutors = async () => {
     try {
       setLoading(true);
-      const result = await api.get(`/users/${user.id}`);
-      setStudents(result.data);
+      const result = await api.get(`/tutores/${user.id}`);
+      setTutors(result.data);
       setLoading(false);
       return;
     } catch (error) {
@@ -37,19 +36,15 @@ export const Students = () => {
     }
   };
 
-  const isFocused = useIsFocused();
-
   useEffect(() => {
-    if(isFocused){ 
-      getStudents()
-    }
-  }, [isFocused])
+    getTutors()
+  }, [])
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header>
         <Menu />
-        <Title ml={25}>Estudantes</Title>
+        <Title ml={25}>Tutores</Title>
       </Header> 
       <Body>
           {loading && (
@@ -58,21 +53,8 @@ export const Students = () => {
               <LoadingMessage>Carregando...</LoadingMessage>
             </LoaderContainer>
           )}
-         <UserListStudent data={students} /> 
+         <UserList data={tutors} /> 
       </Body>
-
-      <WrapperAddPlanner>
-        <MaterialCommunityIcon
-          name="plus"
-          size={35}
-          color={colors.blueDark}
-          // onPress={() => navigate('SignUp', {
-          //   fromStudents: true
-          // })}
-          onPress={() => navigate('ChoiceSignUp')}
-        />
-      </WrapperAddPlanner>
-
       </SafeAreaView>
   )
 }

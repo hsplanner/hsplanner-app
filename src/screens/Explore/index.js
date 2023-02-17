@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Menu, Title } from '../../components';
-import { PlannerList } from '../../components/organisms/PlannerList';
+import { PlannerExplorerList } from '../../components/organisms/PlannerExplorerList';
 import { Body, Header, Loader, LoaderContainer, LoadingMessage } from './styles';
 import { colors } from '../../styles/colors';
 import api from '../../services/api';
 
 
 export const Explore = () => {
-  const [planners, setPlanners] = useState(false)
+  const [planners, setPlanners] = useState([])
 
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +15,11 @@ export const Explore = () => {
     try {
       setLoading(true);
       const result = await api.get(`/planners`);
-      setPlanners(result.data);
+      if(Array.isArray(result.data)) {
+        console.log("#entrou")
+        console.log("#entrou2", result.data)
+        setPlanners(result.data);
+      }
       setLoading(false);
       return;
     } catch (error) {
@@ -29,6 +33,8 @@ export const Explore = () => {
     getPlanners()
   }, [])
 
+  console.log("PLANERS", planners)
+
   return (
     <>
       <Header>
@@ -36,13 +42,15 @@ export const Explore = () => {
         <Title ml={25}>Explorar</Title>
       </Header> 
       <Body>
-          {loading && (
+          {loading ? (
             <LoaderContainer>
               <Loader size="large" color={colors.blueDark} />
               <LoadingMessage>Carregando...</LoadingMessage>
             </LoaderContainer>
-          )}
-         <PlannerList data={planners} /> 
+          ) : (
+                <PlannerExplorerList data={planners} setLoading={setLoading}/> 
+              )
+          }
       </Body>
     </>
   )

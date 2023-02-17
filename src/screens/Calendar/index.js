@@ -14,7 +14,7 @@ import {
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import WeekView, {createFixedWeekDate} from 'react-native-week-view';
-import { Menu, Title, CustomInput, InputLabel, Button } from '../../components';
+import { Menu, Title, CustomInput, InputLabel, Button, CardTextLarge } from '../../components';
 import { validationSchema } from './validationSchema';
 import {Formik, Field} from 'formik';
 import api from '../../services/api';
@@ -27,7 +27,8 @@ import {
   WrapperButtonSave,
   WrapperAddPlanner,
   WrapperModal,
-  Row
+  Row,
+  RowCenter
 } from './styles';
 import { date } from 'yup';
 import { endEvent } from 'react-native/Libraries/Performance/Systrace';
@@ -112,12 +113,15 @@ export const Calendar = ({ route }) => {
 
   // Select
   const [selectedValue, setSelectedValue] = useState(3);
+  const [selectedColor, setSelectedColor] = useState("green");
 
   const getPlanner = async () => {
     try {
       setLoading(true);
+      console.log("#ID", item?._id )
       const result = await api.get(`/planner/${item?._id}`);
-      console.log("eventsServer", result.data?.events)
+      console.log("#resul", result)
+      console.log("eventsServer!", result?.data?.events)
       const eventsResponse = result.data?.events
       console.log("response", eventsResponse)
       const eventsResponseFormatted = eventsResponse?.map((event) => ({
@@ -128,13 +132,14 @@ export const Calendar = ({ route }) => {
         color: event.color
       }))
 
-      console.log("formattted", eventsResponseFormatted)
+      console.log("formatttedGetPlanner", eventsResponseFormatted)
 
       setEvents(eventsResponseFormatted);
       setLoading(false);
       return;
     } catch (error) {
-      console.log('errro', {error});
+      console.log('#erro');
+      console.log('erroGetPlanner', {error});
       setLoading(false);
       return error;
     }
@@ -164,7 +169,6 @@ export const Calendar = ({ route }) => {
   const onUpdate = async (eventId, startDate, endDate, event) => {
     try {
       setLoading(true);
-      console.log("chegou Delete New")
       const body = {
         description: event?.description,
         color: event?.color,
@@ -172,12 +176,34 @@ export const Calendar = ({ route }) => {
         endDate,
         eventId: eventId
       }
-      console.log("bodyUpdate", body)
-      console.log("idPlanning", item?._id)
       const result = await api.patch(`/event/${item?._id}`, body);
       console.log("resultUp", result?.data)
-      
-      // await getPlanner()
+
+      console.log("finishUPdate")
+
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log("erroUpdate")
+
+      console.log('errroDelete', {error});
+      setLoading(false);
+      return error;
+    }
+  };
+
+  const onUpdateByForm = async (id, color, startDate, endDate, description) => {
+    try {
+      setLoading(true);
+      const body = {
+        description,
+        color,
+        startDate,
+        endDate,
+        eventId: id
+      }
+      const result = await api.patch(`/event/${item?._id}`, body);
+      console.log("resultUp", result?.data)
 
       console.log("finishUPdate")
 
@@ -226,14 +252,19 @@ export const Calendar = ({ route }) => {
   };
 
 
-  const onEventPress = ({id, color, startDate, endDate, description}) => {
+  const onEventPress = ({eventId, color, startDate, endDate, description}) => {
     Alert.alert(
       `${description}`,
       `Inicio: ${moment(startDate).format('DD/MM - h:mm a')}\nFim: ${moment(endDate).format('DD/MM - h:mm a')}`,
     [
       {
         text: 'Excluir',
-        onPress: () => onDelete(id),
+        onPress: () => onDelete(eventId),
+        style: 'cancel',
+      },
+      {
+        text: 'Editar',
+        onPress: () => onUpdateByForm(eventId, color, startDate, endDate, description),
         style: 'cancel',
       },
       {
@@ -279,13 +310,16 @@ export const Calendar = ({ route }) => {
 
   const handleSubmitForm = async (data) =>{
   
+    console.log("#1")
     try {
+      console.log("#2")
+      setLoadingModal(true)
       const eventNew = {
         // id: 35,
         description: data.description,
         startDate: initialDate,
         endDate: endDate,
-        color: data.color,
+        color: selectedColor,
         plannerId: item?._id
       }
       console.log("eventNew", eventNew)
@@ -304,7 +338,9 @@ export const Calendar = ({ route }) => {
       //   ...events,
       //   newEventFormatted
       // ])
+      setLoadingModal(false)
     } catch (error) {
+      setLoadingModal(false)
       Alert.alert(
         error?.response?.data?.message ||
         'Ocorreu um erro, tente novamente mais tarde.'
@@ -405,25 +441,48 @@ export const Calendar = ({ route }) => {
             isSubmitting,
           }) => (
             <>
-              <Field
+              {/* <Field
                 component={CustomInput}
                 name="color"
                 placeholder="Cor"
                 label="Cor"
                 autoCapitalize="none"
-              />
+              /> */}
               <Field
                 component={CustomInput}
                 name="description"
                 placeholder="Descrição"
                 label="Descrição" 
               />
-                
-                <Row>
+
+
+              <Row>
+                <Text mt={5} mb={4}>
+                  Cor
+                </Text>
+              </Row>
+
+              <Picker
+                selectedValue={selectedValue}
+                style={{ height: 50, width: "100%" }}
+                onValueChange={(itemValue, itemIndex) => setSelectedColor(itemValue)}
+                mode="dropdown"
+              >
+                <Picker.Item label="Verde" value="green"/>
+                <Picker.Item label="Azul" value="blue" />
+                <Picker.Item label="Vermelho" value="red" />
+                <Picker.Item label="Preto" value="black" />
+                <Picker.Item label="Rosa" value="pink" />
+                <Picker.Item label="Magenta" value="magenta" />
+                <Picker.Item label="Azul Claro" value="lightblue" />
+                <Picker.Item label="Amarelo" value="yellow" />
+              </Picker>
+                        
+                <RowCenter>
                   <Title mr={24} onPress={() => showDatepicker(1)} >Data inicial</Title>
                   <Title onPress={() => showTimepicker(1)}>Hora inicial</Title>
-                </Row>
-                <Text>{moment(initialDate).format('DD/MM - h:mm a')}</Text>
+                </RowCenter>
+                <CardTextLarge>{moment(initialDate).format('DD/MM    --   h:mm a')}</CardTextLarge>
                 {show && (
                   <DateTimePicker
                     testID="dateTimePicker"
@@ -434,11 +493,11 @@ export const Calendar = ({ route }) => {
                     onChange={onChangeInitial}    
                   />
                     )}
-                <Row>
+                <RowCenter>
                   <Title mr={24} onPress={() => showDatepicker(2)}>Data final</Title>
                   <Title onPress={() => showTimepicker(2)}>Hora final</Title>
-                </Row>
-                <Text>{moment(endDate).format('DD/MM - h:mm a')}</Text>
+                </RowCenter>
+                <CardTextLarge>{moment(endDate).format('DD/MM    --   h:mm a')}</CardTextLarge>
                 {show2 && (
                   <DateTimePicker
                     testID="dateTimePicker"

@@ -37,9 +37,8 @@ import {
 } from './styles';
 import api from '../../../services/api';
 import { useAuthInfoStore } from '../../../services/stores';
-import { Alert } from 'react-native';
 
-export const UserCard = ({item}) => {
+export const UserCardStudent = ({item}) => {
   const {navigate} = useNavigation();
   const [loading, setLoading] = useState(false);
 
@@ -57,8 +56,6 @@ export const UserCard = ({item}) => {
       }
       console.log("approve", body)
       const result = await api.patch(`/student`, body);
-      Alert.alert("Tutor aprovado com sucesso ")
-      navigate('Main')
       setLoading(false);
       return;
     } catch (error) {
@@ -82,20 +79,11 @@ export const UserCard = ({item}) => {
         </RightSide>
       </LeftSide>
       <RightSide>
-        {item.ativo === 0 ? ( 
-        <BorderTrash>
-          <MaterialCommunityIcon
-            onPress={approveTutor}
-            name="check"
-            size={22}
-            color={colors.green}
-            />
-        </BorderTrash> 
-      ): (
+
         <StatusLabel>
-          <StatusText>Ativo</StatusText>
-      </StatusLabel>
-      )}
+          <StatusText>{item.ativo === 0 ? 'Não ativo' : 'Ativo'}</StatusText>
+        </StatusLabel>
+
       </RightSide>
     </CardContainer>
   );

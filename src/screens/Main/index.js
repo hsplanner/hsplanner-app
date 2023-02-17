@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
+import { useIsFocused } from "@react-navigation/native";
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, Text, Modal, Alert, SafeAreaView } from 'react-native';
+import { View, Text, Modal, Alert, SafeAreaView, Picker } from 'react-native';
 import {RadioButton} from 'react-native-paper';
 import {Formik, Field} from 'formik';
 import { Button, CustomInput, InputLabel, Menu, Title } from '../../components';
@@ -18,6 +19,11 @@ export const Main = () => {
 
   const [loadingModal, setLoadingModal] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Select
+  const [selectedValue, setSelectedValue] = useState("");
+  const [students, setStudents] = useState([])
+
   const { user } = useAuthInfoStore(); 
   const {setPlannerList, plannerList, increasePlanner} = usePlannerStore();
 
@@ -35,9 +41,29 @@ export const Main = () => {
     }
   };
 
+  const getStudents = async () => {
+    try {
+      setLoading(true);
+      const result = await api.get(`/students/${user.id}`);
+      console.log("resultStudent", result)
+      setStudents(result.data);
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log('errro', {error});
+      setLoading(false);
+      return error;
+    }
+  };
+
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    getPlanners()
-  }, [])
+    if(isFocused){ 
+      getPlanners()
+      getStudents()
+    }
+  }, [isFocused])
 
   async function handleSubmitForm(data) {
     console.log('data!!', data);
@@ -46,7 +72,8 @@ export const Main = () => {
       title: data.title,
       description: data.description,
       status: Number(data.status),
-      idTutor: user.id
+      idTutor: user.id,
+      idAluno: selectedValue ? selectedValue : ""
     }
 
     await api
@@ -79,8 +106,7 @@ export const Main = () => {
     status: '1'
   };
 
-
-  console.log("plannerList", plannerList)
+  console.log("User!", user)
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header>
@@ -97,14 +123,16 @@ export const Main = () => {
          <PlannerList data={plannerList} /> 
       </Body>
     
-        <WrapperAddPlanner>
-          <MaterialCommunityIcon
-            name="plus"
-            size={35}
-            color={colors.blueDark}
-            onPress={() => setModalPlannerVisible(true)}
-          />
-        </WrapperAddPlanner>
+        {user.userType != 1 && 
+          <WrapperAddPlanner>
+            <MaterialCommunityIcon
+              name="plus"
+              size={35}
+              color={colors.blueDark}
+              onPress={() => setModalPlannerVisible(true)}
+            />
+          </WrapperAddPlanner>
+        }
 
       <WrapperModal>
         <Modal visible={modalPlannerVisible} >
@@ -145,7 +173,31 @@ export const Main = () => {
                 name="description"
                 placeholder="Descrição"
                 label="Descrição" 
-                  />
+              />
+
+              <InputLabel style={{marginBottom: 16, marginTop: 20}}>
+                Deseja incluir Aluno ?
+              </InputLabel>
+
+
+              <Picker
+                selectedValue={selectedValue}
+                style={{ height: 50, width: 150 }}
+                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                // mode="dropdown"
+              >
+                <Picker.Item label="" value="" />
+                {students.map((student, i) => {
+                    {console.log("unicoEstudante", student, i)}
+
+                    return (
+                       <Picker.Item label={student.name} value={student._id} />
+                    )
+                })}
+                {/* <Picker.Item label="1 Dia" value={1} />
+                <Picker.Item label="3 Dias" value={3} />
+                <Picker.Item label="7 Dias" value={7} /> */}
+              </Picker>
               <InputLabel style={{marginBottom: 16, marginTop: 20}}>
                   Status
                 </InputLabel>
@@ -177,7 +229,7 @@ export const Main = () => {
         
       </Modal>
       </WrapperModal>
-            </SafeAreaView> 
+      </SafeAreaView> 
 
 
   )

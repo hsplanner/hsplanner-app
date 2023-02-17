@@ -78,6 +78,10 @@ export const Menu = () => {
                     name="account"
                     size={35}
                     color={colors.blueDark}
+                    onPress={() => {
+                      setModalVisible(!modalVisible)
+                      navigator.navigate('MyUser')
+                    }}
                   />
                   <LabelMenu>Meu Usuário</LabelMenu>
                 </Row>
@@ -96,7 +100,25 @@ export const Menu = () => {
                   <LabelMenu>Meus Planners</LabelMenu>
                 </Row>
               </WrapperRow>
-              <WrapperRow>
+              {user?.userType === 1 ?
+              
+              (<WrapperRow>
+                <Row mb={16} mt={16}>
+                  <MaterialCommunityIcon
+                    name="account-multiple"
+                    size={35}
+                    color={colors.blueDark}
+                    onPress={() => {
+                      setModalVisible(!modalVisible)
+                      navigator.navigate('Tutors')
+                    }}
+                  />
+                  <LabelMenu>Tutors</LabelMenu>
+                </Row>
+              </WrapperRow>
+              ) :
+              (
+                <WrapperRow>
                 <Row mb={16} mt={16}>
                   <MaterialCommunityIcon
                     name="account-multiple"
@@ -110,6 +132,9 @@ export const Menu = () => {
                   <LabelMenu>Estudantes</LabelMenu>
                 </Row>
               </WrapperRow>
+              )
+              }
+              {user?.userType === 0 &&
               <WrapperRow>
                 <Row mb={16} mt={16}>
                   <MaterialCommunityIcon
@@ -124,6 +149,7 @@ export const Menu = () => {
                   <LabelMenu>Explorar</LabelMenu>
                 </Row>
               </WrapperRow>
+            }
             </Column>
             <WrapperSignOut>
               <MaterialIcon

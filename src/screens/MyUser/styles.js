@@ -7,15 +7,12 @@ export const Header = styled.View`
   align-items: center;
   flex-direction: row;
   padding-left: 12px;
-  justify-content: space-between;
 `;
 
-export const TitleModal = styled.Text`
-  font-size: 21px;
-  color: ${({theme}) => theme.colors.blue};
-  font-family: 'Montserrat-Bold';
-  align-self: center;
-  margin-left: 20%;
+export const Body = styled.View`
+  height: 100%;
+  padding-top: 15px;
+  align-items: center;
 `;
 
 export const WrapperAddPlanner = styled.View`
@@ -39,7 +36,16 @@ export const WrapperAddPlanner = styled.View`
   elevation: 3;
 `;
 
-export const WrapperModal = styled.SafeAreaView`
+export const FirstLetter = styled.Text`
+  font-size: 21px;
+  color: ${({theme}) => theme.colors.blue};
+  font-family: 'Montserrat-Bold';
+  align-self: center;
+  margin-left: 20%;
+`;
+
+export const WrapperModal = styled.View`
+    flex: 1;
     justify-content: center;
     align-items: center;
     margin-top: 22px;
@@ -52,7 +58,6 @@ export const WrapperModalContent = styled.View`
 `;
 
 export const HeaderModal = styled.View`
-  margin-top: 24px;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
@@ -64,17 +69,38 @@ export const WrapperButtonSave = styled.View`
   margin-top: 12px;
 `;
 
-export const Row = styled.View`
+export const ContainerRadio = styled.View`
+  display: flex;
   flex-direction: row;
-  margin-top: 12px;
-  /* align-items: flex-start;
-  background-color: red; */
-  width: 100%;
+  justify-content: flex-start;
 `;
 
-export const RowCenter = styled.View`
-  flex-direction: row;
-  margin-top: 12px;
-  justify-content: center;
+export const LoaderContainer = styled.View`
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: ${({theme}) => theme.metrics.px(64)}px;
+`;
+
+export const Loader = styled.ActivityIndicator`
+  margin-bottom: ${({theme}) => theme.metrics.px(16)}px;
+`;
+
+export const LoadingMessage = styled.Text`
+  font-size: 14px;
+  color: ${({theme}) => theme.colors.blueDark};
+  font-family: 'Montserrat-SemiBold';
+`;
+
+export const Circle = styled.View`
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  background-color: #D9E6F2;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
+  margin-right: 8px;
+  margin-top: 25px;
 `;
