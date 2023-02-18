@@ -161,6 +161,7 @@ export const Calendar = ({ route }) => {
       return;
     } catch (error) {
       console.log('errroDelete', {error});
+      console.log('errroDelete', error?.response);
       setLoading(false);
       return error;
     }
@@ -252,19 +253,19 @@ export const Calendar = ({ route }) => {
   };
 
 
-  const onEventPress = ({eventId, color, startDate, endDate, description}) => {
+  const onEventPress = ({id, color, startDate, endDate, description}) => {
     Alert.alert(
       `${description}`,
       `Inicio: ${moment(startDate).format('DD/MM - h:mm a')}\nFim: ${moment(endDate).format('DD/MM - h:mm a')}`,
     [
       {
         text: 'Excluir',
-        onPress: () => onDelete(eventId),
+        onPress: () => onDelete(id),
         style: 'cancel',
       },
       {
         text: 'Editar',
-        onPress: () => onUpdateByForm(eventId, color, startDate, endDate, description),
+        onPress: () => onUpdateByForm(id, color, startDate, endDate, description),
         style: 'cancel',
       },
       {
